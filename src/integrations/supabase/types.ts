@@ -14,16 +14,376 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      areas: {
+        Row: {
+          area_owner_id: string | null
+          code: string
+          created_at: string
+          id: string
+          name: string
+          plant_id: string
+        }
+        Insert: {
+          area_owner_id?: string | null
+          code: string
+          created_at?: string
+          id?: string
+          name: string
+          plant_id: string
+        }
+        Update: {
+          area_owner_id?: string | null
+          code?: string
+          created_at?: string
+          id?: string
+          name?: string
+          plant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "areas_area_owner_id_fkey"
+            columns: ["area_owner_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "areas_plant_id_fkey"
+            columns: ["plant_id"]
+            isOneToOne: false
+            referencedRelation: "plants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      permit_approvals: {
+        Row: {
+          approver_id: string | null
+          comment: string | null
+          created_at: string
+          decided_at: string | null
+          decision: Database["public"]["Enums"]["approval_decision"]
+          id: string
+          permit_id: string
+          required_role: Database["public"]["Enums"]["app_role"]
+          step_order: number
+        }
+        Insert: {
+          approver_id?: string | null
+          comment?: string | null
+          created_at?: string
+          decided_at?: string | null
+          decision?: Database["public"]["Enums"]["approval_decision"]
+          id?: string
+          permit_id: string
+          required_role: Database["public"]["Enums"]["app_role"]
+          step_order: number
+        }
+        Update: {
+          approver_id?: string | null
+          comment?: string | null
+          created_at?: string
+          decided_at?: string | null
+          decision?: Database["public"]["Enums"]["approval_decision"]
+          id?: string
+          permit_id?: string
+          required_role?: Database["public"]["Enums"]["app_role"]
+          step_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "permit_approvals_approver_id_fkey"
+            columns: ["approver_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "permit_approvals_permit_id_fkey"
+            columns: ["permit_id"]
+            isOneToOne: false
+            referencedRelation: "permits"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      permit_status_history: {
+        Row: {
+          changed_by: string | null
+          created_at: string
+          from_status: Database["public"]["Enums"]["permit_status"] | null
+          id: string
+          note: string | null
+          permit_id: string
+          to_status: Database["public"]["Enums"]["permit_status"]
+        }
+        Insert: {
+          changed_by?: string | null
+          created_at?: string
+          from_status?: Database["public"]["Enums"]["permit_status"] | null
+          id?: string
+          note?: string | null
+          permit_id: string
+          to_status: Database["public"]["Enums"]["permit_status"]
+        }
+        Update: {
+          changed_by?: string | null
+          created_at?: string
+          from_status?: Database["public"]["Enums"]["permit_status"] | null
+          id?: string
+          note?: string | null
+          permit_id?: string
+          to_status?: Database["public"]["Enums"]["permit_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "permit_status_history_changed_by_fkey"
+            columns: ["changed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "permit_status_history_permit_id_fkey"
+            columns: ["permit_id"]
+            isOneToOne: false
+            referencedRelation: "permits"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      permit_types: {
+        Row: {
+          accent: string
+          code: string
+          created_at: string
+          description: string | null
+          field_schema: Json
+          id: string
+          is_active: boolean
+          name: string
+          sort_order: number
+        }
+        Insert: {
+          accent?: string
+          code: string
+          created_at?: string
+          description?: string | null
+          field_schema?: Json
+          id?: string
+          is_active?: boolean
+          name: string
+          sort_order?: number
+        }
+        Update: {
+          accent?: string
+          code?: string
+          created_at?: string
+          description?: string | null
+          field_schema?: Json
+          id?: string
+          is_active?: boolean
+          name?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
+      permits: {
+        Row: {
+          area_id: string | null
+          contractor_company: string | null
+          created_at: string
+          equipment: string | null
+          hazards: string[]
+          id: string
+          permit_number: string
+          permit_type_id: string
+          planned_end: string
+          planned_start: string
+          plant_id: string | null
+          ppe: string[]
+          precautions: string[]
+          requester_id: string | null
+          status: Database["public"]["Enums"]["permit_status"]
+          type_data: Json
+          updated_at: string
+          work_description: string
+          work_team: string | null
+        }
+        Insert: {
+          area_id?: string | null
+          contractor_company?: string | null
+          created_at?: string
+          equipment?: string | null
+          hazards?: string[]
+          id?: string
+          permit_number: string
+          permit_type_id: string
+          planned_end: string
+          planned_start: string
+          plant_id?: string | null
+          ppe?: string[]
+          precautions?: string[]
+          requester_id?: string | null
+          status?: Database["public"]["Enums"]["permit_status"]
+          type_data?: Json
+          updated_at?: string
+          work_description: string
+          work_team?: string | null
+        }
+        Update: {
+          area_id?: string | null
+          contractor_company?: string | null
+          created_at?: string
+          equipment?: string | null
+          hazards?: string[]
+          id?: string
+          permit_number?: string
+          permit_type_id?: string
+          planned_end?: string
+          planned_start?: string
+          plant_id?: string | null
+          ppe?: string[]
+          precautions?: string[]
+          requester_id?: string | null
+          status?: Database["public"]["Enums"]["permit_status"]
+          type_data?: Json
+          updated_at?: string
+          work_description?: string
+          work_team?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "permits_area_id_fkey"
+            columns: ["area_id"]
+            isOneToOne: false
+            referencedRelation: "areas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "permits_permit_type_id_fkey"
+            columns: ["permit_type_id"]
+            isOneToOne: false
+            referencedRelation: "permit_types"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "permits_plant_id_fkey"
+            columns: ["plant_id"]
+            isOneToOne: false
+            referencedRelation: "plants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "permits_requester_id_fkey"
+            columns: ["requester_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      plants: {
+        Row: {
+          code: string
+          created_at: string
+          id: string
+          name: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          id?: string
+          name: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          full_name: string
+          id: string
+          job_title: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          full_name: string
+          id?: string
+          job_title?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          full_name?: string
+          id?: string
+          job_title?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          profile_id: string
+          role: Database["public"]["Enums"]["app_role"]
+        }
+        Insert: {
+          id?: string
+          profile_id: string
+          role: Database["public"]["Enums"]["app_role"]
+        }
+        Update: {
+          id?: string
+          profile_id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_roles_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "requester" | "area_owner" | "safety_officer" | "admin"
+      approval_decision: "PENDING" | "APPROVED" | "REJECTED"
+      permit_status:
+        | "DRAFT"
+        | "PENDING_APPROVAL"
+        | "APPROVED"
+        | "ACTIVE"
+        | "SUSPENDED"
+        | "REJECTED"
+        | "EXPIRED"
+        | "CLOSED"
+        | "CLOSED_VERIFIED"
+        | "CANCELLED"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +510,21 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["requester", "area_owner", "safety_officer", "admin"],
+      approval_decision: ["PENDING", "APPROVED", "REJECTED"],
+      permit_status: [
+        "DRAFT",
+        "PENDING_APPROVAL",
+        "APPROVED",
+        "ACTIVE",
+        "SUSPENDED",
+        "REJECTED",
+        "EXPIRED",
+        "CLOSED",
+        "CLOSED_VERIFIED",
+        "CANCELLED",
+      ],
+    },
   },
 } as const
