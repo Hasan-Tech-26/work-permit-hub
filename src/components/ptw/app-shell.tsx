@@ -7,9 +7,8 @@ function NavItem({ to, label }: { to: string; label: string }) {
       to={to}
       activeOptions={{ exact: to === "/" }}
       className="flex items-center gap-2.5 px-2 py-2 text-muted transition-colors hover:text-foreground"
-      activeProps={{ className: "bg-raised text-foreground" }}
+      activeProps={{ className: "bg-raised !text-foreground" }}
     >
-      <span className="size-1.5 rounded-full bg-safety opacity-0 in-[.bg-raised]:opacity-100" />
       {label}
     </Link>
   );
