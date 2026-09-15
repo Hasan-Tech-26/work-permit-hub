@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PermitsIndexRouteImport } from './routes/permits.index'
+import { Route as PermitsPermitNumberRouteImport } from './routes/permits.$permitNumber'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,30 +23,39 @@ const PermitsIndexRoute = PermitsIndexRouteImport.update({
   path: '/permits/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PermitsPermitNumberRoute = PermitsPermitNumberRouteImport.update({
+  id: '/permits/$permitNumber',
+  path: '/permits/$permitNumber',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/permits/$permitNumber': typeof PermitsPermitNumberRoute
   '/permits/': typeof PermitsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/permits/$permitNumber': typeof PermitsPermitNumberRoute
   '/permits': typeof PermitsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/permits/$permitNumber': typeof PermitsPermitNumberRoute
   '/permits/': typeof PermitsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/permits/'
+  fullPaths: '/' | '/permits/$permitNumber' | '/permits/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/permits'
-  id: '__root__' | '/' | '/permits/'
+  to: '/' | '/permits/$permitNumber' | '/permits'
+  id: '__root__' | '/' | '/permits/$permitNumber' | '/permits/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  PermitsPermitNumberRoute: typeof PermitsPermitNumberRoute
   PermitsIndexRoute: typeof PermitsIndexRoute
 }
 
@@ -65,11 +75,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PermitsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/permits/$permitNumber': {
+      id: '/permits/$permitNumber'
+      path: '/permits/$permitNumber'
+      fullPath: '/permits/$permitNumber'
+      preLoaderRoute: typeof PermitsPermitNumberRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  PermitsPermitNumberRoute: PermitsPermitNumberRoute,
   PermitsIndexRoute: PermitsIndexRoute,
 }
 export const routeTree = rootRouteImport
