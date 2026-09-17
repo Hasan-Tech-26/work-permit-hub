@@ -93,15 +93,7 @@ export function AppShell({
           <NavItem to="/permits" label="Permits" />
         </nav>
         <div className="border-t border-border p-3">
-          <div className="flex items-center gap-2.5 px-2 py-2">
-            <div className="grid size-8 place-items-center rounded-full bg-st-approved/15 font-mono text-[11px] font-medium text-st-approved">
-              MS
-            </div>
-            <div className="leading-tight">
-              <div className="text-xs font-semibold">M. Sandoval</div>
-              <div className="font-mono text-[10px] text-muted">SAFETY OFFICER</div>
-            </div>
-          </div>
+          <UserCard />
         </div>
       </aside>
 
