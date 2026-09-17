@@ -96,14 +96,15 @@ export type HistoryRow = {
   changed_by: { full_name: string } | null;
 };
 
+// UTC-based so server render and client render always agree.
 export function fmtDateTime(iso: string) {
   const d = new Date(iso);
   const p = (n: number) => String(n).padStart(2, "0");
-  return `${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+  return `${p(d.getUTCMonth() + 1)}-${p(d.getUTCDate())} ${p(d.getUTCHours())}:${p(d.getUTCMinutes())}`;
 }
 
 export function fmtTime(iso: string) {
   const d = new Date(iso);
   const p = (n: number) => String(n).padStart(2, "0");
-  return `${p(d.getHours())}:${p(d.getMinutes())}`;
+  return `${p(d.getUTCHours())}:${p(d.getUTCMinutes())}`;
 }
