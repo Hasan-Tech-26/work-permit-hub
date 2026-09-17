@@ -10,12 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as PermitsIndexRouteImport } from './routes/permits.index'
 import { Route as PermitsPermitNumberRouteImport } from './routes/permits.$permitNumber'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PermitsIndexRoute = PermitsIndexRouteImport.update({
@@ -31,30 +37,34 @@ const PermitsPermitNumberRoute = PermitsPermitNumberRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/permits/$permitNumber': typeof PermitsPermitNumberRoute
   '/permits/': typeof PermitsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/permits/$permitNumber': typeof PermitsPermitNumberRoute
   '/permits': typeof PermitsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/permits/$permitNumber': typeof PermitsPermitNumberRoute
   '/permits/': typeof PermitsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/permits/$permitNumber' | '/permits/'
+  fullPaths: '/' | '/auth' | '/permits/$permitNumber' | '/permits/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/permits/$permitNumber' | '/permits'
-  id: '__root__' | '/' | '/permits/$permitNumber' | '/permits/'
+  to: '/' | '/auth' | '/permits/$permitNumber' | '/permits'
+  id: '__root__' | '/' | '/auth' | '/permits/$permitNumber' | '/permits/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthRoute: typeof AuthRoute
   PermitsPermitNumberRoute: typeof PermitsPermitNumberRoute
   PermitsIndexRoute: typeof PermitsIndexRoute
 }
@@ -66,6 +76,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/permits/': {
@@ -87,6 +104,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthRoute: AuthRoute,
   PermitsPermitNumberRoute: PermitsPermitNumberRoute,
   PermitsIndexRoute: PermitsIndexRoute,
 }

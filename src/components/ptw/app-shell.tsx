@@ -1,5 +1,50 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import type { ReactNode } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { initials, useAuth } from "@/lib/auth";
+
+function UserCard() {
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
+
+  if (loading) {
+    return <div className="px-2 py-2 font-mono text-[10px] text-muted">…</div>;
+  }
+
+  if (!user) {
+    return (
+      <Link
+        to="/auth"
+        className="block px-2 py-2 font-mono text-[10px] tracking-[0.15em] text-muted hover:text-foreground"
+      >
+        SIGN IN
+      </Link>
+    );
+  }
+
+  const label = (user.user_metadata?.["full_name"] as string | undefined) ?? user.email ?? "USER";
+
+  return (
+    <div className="flex items-center gap-2.5 px-2 py-2">
+      <div className="grid size-8 place-items-center rounded-full bg-st-approved/15 font-mono text-[11px] font-medium text-st-approved">
+        {initials(label)}
+      </div>
+      <div className="min-w-0 leading-tight">
+        <div className="truncate text-xs font-semibold">{label}</div>
+        <button
+          type="button"
+          onClick={async () => {
+            await supabase.auth.signOut();
+            navigate({ to: "/auth" });
+          }}
+          className="font-mono text-[10px] text-muted hover:text-foreground"
+        >
+          SIGN OUT
+        </button>
+      </div>
+    </div>
+  );
+}
 
 function NavItem({ to, label }: { to: string; label: string }) {
   return (
