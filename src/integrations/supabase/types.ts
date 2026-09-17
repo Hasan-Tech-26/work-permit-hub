@@ -107,6 +107,47 @@ export type Database = {
           },
         ]
       }
+      permit_audit_log: {
+        Row: {
+          action: string
+          actor_id: string | null
+          comment: string | null
+          created_at: string
+          from_value: Json | null
+          id: string
+          permit_id: string
+          to_value: Json | null
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          comment?: string | null
+          created_at?: string
+          from_value?: Json | null
+          id?: string
+          permit_id: string
+          to_value?: Json | null
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          comment?: string | null
+          created_at?: string
+          from_value?: Json | null
+          id?: string
+          permit_id?: string
+          to_value?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "permit_audit_log_permit_id_fkey"
+            columns: ["permit_id"]
+            isOneToOne: false
+            referencedRelation: "permits"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       permit_status_history: {
         Row: {
           changed_by: string | null
@@ -187,6 +228,38 @@ export type Database = {
           sort_order?: number
         }
         Relationships: []
+      }
+      permit_work_logs: {
+        Row: {
+          id: string
+          logged_at: string
+          logged_by: string
+          notes: string | null
+          permit_id: string
+        }
+        Insert: {
+          id?: string
+          logged_at?: string
+          logged_by: string
+          notes?: string | null
+          permit_id: string
+        }
+        Update: {
+          id?: string
+          logged_at?: string
+          logged_by?: string
+          notes?: string | null
+          permit_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "permit_work_logs_permit_id_fkey"
+            columns: ["permit_id"]
+            isOneToOne: false
+            referencedRelation: "permits"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       permits: {
         Row: {
