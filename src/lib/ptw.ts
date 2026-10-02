@@ -22,6 +22,82 @@ export const ROLE_LABELS: Record<AppRole, string> = {
   admin: "Admin",
 };
 
+export const PERMIT_STATUS_ORDER: Record<PermitStatus, number> = {
+  DRAFT: 0,
+  PENDING_APPROVAL: 1,
+  APPROVED: 2,
+  ACTIVE: 3,
+  SUSPENDED: 4,
+  REJECTED: 5,
+  EXPIRED: 6,
+  CLOSED: 7,
+  CLOSED_VERIFIED: 8,
+  CANCELLED: 9,
+};
+
+export function riskFromHazards(hazards: string[] = []) {
+  const normalized = hazards
+    .flatMap((entry) => String(entry).split(/[;,]/))
+    .map((entry) => entry.trim().toLowerCase())
+    .filter(Boolean);
+
+  const highRiskKeywords = [
+    "electrical",
+    "hot work",
+    "fire",
+    "explosive",
+    "confined",
+    "asphyxiation",
+    "oxygen",
+    "chemical",
+    "pressure",
+    "lift",
+    "crane",
+    "fall",
+    "height",
+  ];
+
+  const criticalKeywords = [
+    "gas",
+    "hydrogen",
+    "live electrical",
+    "confined space",
+    "explosion",
+    "radiation",
+  ];
+
+  const matches = normalized.filter((entry) =>
+    highRiskKeywords.some((keyword) => entry.includes(keyword)),
+  );
+  const criticalMatches = normalized.filter((entry) =>
+    criticalKeywords.some((keyword) => entry.includes(keyword)),
+  );
+
+  if (criticalMatches.length > 0) return "Critical";
+  if (matches.length > 1 || normalized.length > 3) return "High";
+  if (normalized.length > 0) return "Medium";
+  return "Low";
+}
+
+export function expiryLabel(isoDate: string) {
+  const end = new Date(isoDate).getTime();
+  const now = Date.now();
+  const diff = end - now;
+
+  if (Number.isNaN(diff) || diff <= 0) return "Expired";
+  const totalMinutes = Math.max(0, Math.round(diff / 60000));
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+
+  if (hours > 24) {
+    const days = Math.floor(hours / 24);
+    return `Expires in ${days}d ${hours % 24}h`;
+  }
+  if (hours > 0) return `Expires in ${hours}h ${minutes}m`;
+  if (minutes > 0) return `Expires in ${minutes}m`;
+  return "Expires soon";
+}
+
 type StatusMeta = { label: string; token: string; pulse: boolean };
 
 export const STATUS_META: Record<PermitStatus, StatusMeta> = {
@@ -96,15 +172,32 @@ export type HistoryRow = {
   changed_by: { full_name: string } | null;
 };
 
-// UTC-based so server render and client render always agree.
+export type WorkLogRow = {
+  id: string;
+  notes: string;
+  logged_at: string;
+  logged_by: { full_name: string } | null;
+};
+
+export type AuditRow = {
+  id: string;
+  action: string;
+  from_status: PermitStatus | null;
+  to_status: PermitStatus | null;
+  comment: string | null;
+  field_changes: Record<string, unknown>;
+  created_at: string;
+  actor: { full_name: string } | null;
+};
+
 export function fmtDateTime(iso: string) {
   const d = new Date(iso);
   const p = (n: number) => String(n).padStart(2, "0");
-  return `${p(d.getUTCMonth() + 1)}-${p(d.getUTCDate())} ${p(d.getUTCHours())}:${p(d.getUTCMinutes())}`;
+  return `${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
 }
 
 export function fmtTime(iso: string) {
   const d = new Date(iso);
   const p = (n: number) => String(n).padStart(2, "0");
-  return `${p(d.getUTCHours())}:${p(d.getUTCMinutes())}`;
+  return `${p(d.getHours())}:${p(d.getMinutes())}`;
 }

@@ -1,34 +1,45 @@
 # Work Permit Hub
 
-Build a full-stack Permit to Work (PTW) management web application for a CMMS internship assignment.
+Tallyard PTW Control is a Permit to Work module for industrial CMMS operations. It provides a shared permit register, approval chain, controlled lifecycle, work logging, and an auditable closure workflow over the existing Supabase PostgreSQL database. The dashboard and register read seeded and user-created records; no mock or in-memory data is used.
 
-Use React + TypeScript + Tailwind CSS with Supabase/PostgreSQL.
+## Stack and setup
 
-Create the foundation only:
+- React 19, TypeScript, TanStack Start/Router/Query, Tailwind CSS
+- Supabase Auth and PostgreSQL with migrations under `supabase/migrations`
+- Node.js and npm
 
-- Professional operations/industrial UI
+```sh
+npm install
+npm run dev
+```
 
-- Dashboard and permit list
+`SUPABASE_URL` and `SUPABASE_PUBLISHABLE_KEY` are supplied by Lovable Cloud. Run `npm run build` for the production compile and `npm run lint` for static checks.
 
-- Real PostgreSQL/Supabase database
+## PTW model
 
-- Shared Permit entity/model, NOT four separate permit models
+There is one `permits` table and one shared `PermitRow` shape. Permit types are data in `permit_types`; each type stores its dynamic field definitions in `field_schema`, while a permit stores values in `type_data`. Adding a fifth permit type therefore requires an insert into `permit_types`, not a schema or TypeScript model fork.
 
-- Roles: Requester, Area Owner, Safety Officer, Admin
+The seeded types are Hot Work, Confined Space Entry, Working at Height, and Electrical / Isolation (LOTO). Plants and areas are database records, including Riverbend 04 (`RB04`) and Northgate Heat 02 (`NH02`), and the create form loads them as selectors.
 
-- Permit types: Hot Work, Confined Space Entry, Working at Height, Electrical/Isolation (LOTO)
+## Lifecycle and permissions
 
-- Common permit fields: requester, contractor/team, work description, plant, area, equipment, planned start/end, hazards, PPE, precautions, approvals, status
+The supported lifecycle is `DRAFT -> PENDING_APPROVAL -> APPROVED -> ACTIVE -> CLOSED -> CLOSED_VERIFIED`. Rejection, suspension/resume, cancellation, and expiry are controlled alternatives. Server functions validate every transition and the workflow migration adds a PostgreSQL trigger that rejects illegal direct status changes.
 
-- Type-specific fields should be flexible so a fifth permit type can be added later without rewriting the Permit model
+Requesters create and submit their own permits, close their active work, and cannot approve themselves. Area Owners approve permits in their assigned area. Safety Officers approve, reject, suspend/resume, and verify closure. Admins have full operational access. Mutations derive the actor from the Supabase bearer token and never trust a requester or role supplied by the browser.
 
-- Permit statuses: DRAFT, PENDING_APPROVAL, APPROVED, ACTIVE, SUSPENDED, REJECTED, EXPIRED, CLOSED, CLOSED_VERIFIED, CANCELLED
+## Architecture
 
-- Create the database schema and relationships properly.
+Protected mutations live in `src/lib/ptw.functions.ts` and use `requireSupabaseAuth`. Approval rows are created on submission and each decision records the approver, comment, and timestamp. `permit_status_history` records lifecycle movements. The workflow migration adds append-only `permit_audit_log` and `permit_work_logs`; work logs are rejected unless the permit is currently `ACTIVE`.
 
-Important: do not build optional features yet. Do not use mock-only data or local/in-memory storage. Use the real database.
+Expiry is evaluated before activation and resume, and expired windows cannot be reactivated. The existing seeded examples cover active, pending, approved, suspended, rejected, expired, draft, closed, verified, and cancelled states; the workflow migration completes the seeded approved permit's admin approval.
 
-This project was built with [Lovable](https://lovable.dev).
+## Demo data and authentication
+
+The migrations include named profiles and role assignments for a requester, two Area Owners, a Safety Officer, and an Admin. In a deployed environment, authenticated Supabase users must have a matching `profiles.user_id` (the server also supports a profile ID equal to the auth subject for local seeded demonstrations). The app does not expose UUID entry fields in the UI.
+
+## AI usage, limitations, and next steps
+
+AI assistance was used to inspect the existing repository, preserve its UI conventions, implement the server-side workflow, and validate the TypeScript build. Known limitations are that profile-to-auth account provisioning is environment-specific, role-aware button visibility is intentionally conservative because the UI does not yet have a dedicated current-user query, and there is no automated test runner configured in the foundation. Future improvements include an admin role-management screen, database RPC transactions for multi-write mutations, scheduled expiry processing, attachment/evidence storage, and integration tests against a disposable Supabase project.
 
 ## Build with Lovable
 

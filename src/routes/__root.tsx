@@ -3,14 +3,17 @@ import {
   Outlet,
   Link,
   createRootRouteWithContext,
+  useLocation,
+  useNavigate,
   useRouter,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, type ReactNode, useState } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { supabase } from "@/integrations/supabase/client";
 
 function NotFoundComponent() {
   return (
@@ -96,7 +99,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap",
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
   }),
   shellComponent: RootShell,
@@ -121,10 +123,54 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [sessionReady, setSessionReady] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+
+    const verifySession = async () => {
+      const { data } = await supabase.auth.getSession();
+      if (!active) return;
+      const isPublicRoute = location.pathname === "/login";
+      if (!data.session && !isPublicRoute) {
+        await navigate({ to: "/login", search: { next: location.pathname } });
+      }
+      setSessionReady(true);
+    };
+
+    void verifySession();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      if (!active) return;
+      const isPublicRoute = location.pathname === "/login";
+      if (!session && !isPublicRoute) {
+        await navigate({ to: "/login", search: { next: location.pathname } });
+      }
+      setSessionReady(true);
+    });
+
+    return () => {
+      active = false;
+      subscription.unsubscribe();
+    };
+  }, [location.pathname, navigate]);
+
+  if (!sessionReady && location.pathname !== "/login") {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background text-foreground">
+        <div className="font-mono text-[11px] tracking-[0.2em] text-muted">
+          VERIFYING SESSION...
+        </div>
+      </div>
+    );
+  }
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
     </QueryClientProvider>
   );

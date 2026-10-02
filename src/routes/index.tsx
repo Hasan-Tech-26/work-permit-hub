@@ -51,7 +51,13 @@ export const Route = createFileRoute("/")({
   component: Dashboard,
 });
 
-const OPEN_STATUSES: PermitStatus[] = ["DRAFT", "PENDING_APPROVAL", "APPROVED", "ACTIVE", "SUSPENDED"];
+const OPEN_STATUSES: PermitStatus[] = [
+  "DRAFT",
+  "PENDING_APPROVAL",
+  "APPROVED",
+  "ACTIVE",
+  "SUSPENDED",
+];
 
 function Dashboard() {
   const { data: permits } = useSuspenseQuery(permitsQuery);
@@ -70,7 +76,13 @@ function Dashboard() {
   const max = Math.max(1, ...PERMIT_STATUSES.map((s) => count(s)));
 
   const kpis = [
-    { label: "ACTIVE", value: count("ACTIVE"), note: "IN-SERVICE WORK", token: "var(--st-active)", pulse: true },
+    {
+      label: "ACTIVE",
+      value: count("ACTIVE"),
+      note: "IN-SERVICE WORK",
+      token: "var(--st-active)",
+      pulse: true,
+    },
     {
       label: "PENDING APPROVAL",
       value: count("PENDING_APPROVAL"),
@@ -78,8 +90,20 @@ function Dashboard() {
       token: "var(--st-pending)",
       pulse: false,
     },
-    { label: "EXPIRING < 24H", value: expiring, note: "REQUIRES RENEWAL", token: "var(--st-suspended)", pulse: false },
-    { label: "TOTAL OPEN", value: open, note: `ACROSS ${areas} AREAS`, token: "var(--st-approved)", pulse: false },
+    {
+      label: "EXPIRING < 24H",
+      value: expiring,
+      note: "REQUIRES RENEWAL",
+      token: "var(--st-suspended)",
+      pulse: false,
+    },
+    {
+      label: "TOTAL OPEN",
+      value: open,
+      note: `ACROSS ${areas} AREAS`,
+      token: "var(--st-approved)",
+      pulse: false,
+    },
   ];
 
   const register = permits.slice(0, 7);
@@ -87,7 +111,17 @@ function Dashboard() {
   return (
     <AppShell breadcrumb="OPERATIONS / DASHBOARD" title="PERMIT BOARD">
       <section className="px-8 pt-6">
-        <SectionRule label="(a) LIVE STATUS" />
+        <div className="flex items-end gap-3">
+          <div className="flex-1">
+            <SectionRule label="(a) LIVE STATUS" />
+          </div>
+          <Link
+            to="/permits/new"
+            className="mb-5 border border-safety bg-safety px-3 py-2 font-mono text-[10px] tracking-[0.12em] text-safety-ink"
+          >
+            + CREATE PERMIT
+          </Link>
+        </div>
         <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
           {kpis.map((k, i) => (
             <div
@@ -123,7 +157,10 @@ function Dashboard() {
                   <span className="h-2 flex-1 overflow-hidden rounded-full bg-surface">
                     <span
                       className="block h-full"
-                      style={{ width: `${(count(s) / max) * 100}%`, background: STATUS_META[s].token }}
+                      style={{
+                        width: `${(count(s) / max) * 100}%`,
+                        background: STATUS_META[s].token,
+                      }}
                     />
                   </span>
                   <span className="w-4 text-right font-mono">{count(s)}</span>
@@ -133,7 +170,9 @@ function Dashboard() {
           </div>
 
           <div className="border border-border bg-raised p-4">
-            <div className="mb-3 font-mono text-[10px] tracking-[0.15em] text-muted">RECENT ACTIVITY</div>
+            <div className="mb-3 font-mono text-[10px] tracking-[0.15em] text-muted">
+              RECENT ACTIVITY
+            </div>
             <div className="space-y-3 text-[11px]">
               {activity.map((a) => (
                 <div key={a.id} className="flex gap-2.5">
@@ -155,7 +194,9 @@ function Dashboard() {
           </div>
 
           <div className="border border-border bg-raised p-4">
-            <div className="mb-3 font-mono text-[10px] tracking-[0.15em] text-muted">PERMIT TYPES IN PLAY</div>
+            <div className="mb-3 font-mono text-[10px] tracking-[0.15em] text-muted">
+              PERMIT TYPES IN PLAY
+            </div>
             <div className="space-y-3 text-[11px]">
               {Array.from(
                 permits.reduce((m, p) => {
@@ -179,7 +220,10 @@ function Dashboard() {
       </section>
 
       <section className="px-8 pt-6">
-        <SectionRule label="(c) PERMIT REGISTER" right={`${permits.length} RECORDS · SORTED BY WINDOW`} />
+        <SectionRule
+          label="(c) PERMIT REGISTER"
+          right={`${permits.length} RECORDS · SORTED BY WINDOW`}
+        />
         <div className="border border-border bg-raised">
           <div className="grid grid-cols-12 gap-3 border-b border-border px-4 py-2.5 font-mono text-[10px] tracking-[0.12em] text-muted">
             <div className="col-span-2">PERMIT NO.</div>
@@ -199,11 +243,16 @@ function Dashboard() {
               >
                 <div className="col-span-2 font-mono text-[12px]">{p.permit_number}</div>
                 <div className="col-span-3">
-                  <TypeChip name={p.permit_type?.name ?? "—"} accent={p.permit_type?.accent ?? "safety"} />
+                  <TypeChip
+                    name={p.permit_type?.name ?? "—"}
+                    accent={p.permit_type?.accent ?? "safety"}
+                  />
                 </div>
                 <div className="col-span-2 text-muted">{p.area?.name ?? "—"}</div>
                 <div className="col-span-2 text-muted">{p.requester?.full_name ?? "—"}</div>
-                <div className="col-span-2 font-mono text-[11px] text-muted">{fmtDateTime(p.planned_start)}</div>
+                <div className="col-span-2 font-mono text-[11px] text-muted">
+                  {fmtDateTime(p.planned_start)}
+                </div>
                 <div className="col-span-1">
                   <StatusChip status={p.status} />
                 </div>
@@ -211,7 +260,10 @@ function Dashboard() {
             ))}
           </div>
           <div className="border-t border-border px-4 py-2.5 text-right">
-            <Link to="/permits" className="font-mono text-[10px] tracking-[0.15em] text-safety hover:underline">
+            <Link
+              to="/permits"
+              className="font-mono text-[10px] tracking-[0.15em] text-safety hover:underline"
+            >
               OPEN FULL REGISTER →
             </Link>
           </div>

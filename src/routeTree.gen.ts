@@ -10,18 +10,43 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AuthRouteImport } from './routes/auth'
+import { Route as ApprovalsRouteImport } from './routes/approvals'
+import { Route as AuditTrailRouteImport } from './routes/audit-trail'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as WorkLogsRouteImport } from './routes/work-logs'
 import { Route as PermitsIndexRouteImport } from './routes/permits.index'
 import { Route as PermitsPermitNumberRouteImport } from './routes/permits.$permitNumber'
+import { Route as PermitsNewRouteImport } from './routes/permits.new'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthRoute = AuthRouteImport.update({
-  id: '/auth',
-  path: '/auth',
+const ApprovalsRoute = ApprovalsRouteImport.update({
+  id: '/approvals',
+  path: '/approvals',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuditTrailRoute = AuditTrailRouteImport.update({
+  id: '/audit-trail',
+  path: '/audit-trail',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WorkLogsRoute = WorkLogsRouteImport.update({
+  id: '/work-logs',
+  path: '/work-logs',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PermitsIndexRoute = PermitsIndexRouteImport.update({
@@ -34,38 +59,91 @@ const PermitsPermitNumberRoute = PermitsPermitNumberRouteImport.update({
   path: '/permits/$permitNumber',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PermitsNewRoute = PermitsNewRouteImport.update({
+  id: '/permits/new',
+  path: '/permits/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/auth': typeof AuthRoute
+  '/approvals': typeof ApprovalsRoute
+  '/audit-trail': typeof AuditTrailRoute
+  '/login': typeof LoginRoute
+  '/settings': typeof SettingsRoute
+  '/work-logs': typeof WorkLogsRoute
   '/permits/$permitNumber': typeof PermitsPermitNumberRoute
+  '/permits/new': typeof PermitsNewRoute
   '/permits/': typeof PermitsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/auth': typeof AuthRoute
+  '/approvals': typeof ApprovalsRoute
+  '/audit-trail': typeof AuditTrailRoute
+  '/login': typeof LoginRoute
+  '/settings': typeof SettingsRoute
+  '/work-logs': typeof WorkLogsRoute
   '/permits/$permitNumber': typeof PermitsPermitNumberRoute
+  '/permits/new': typeof PermitsNewRoute
   '/permits': typeof PermitsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/auth': typeof AuthRoute
+  '/approvals': typeof ApprovalsRoute
+  '/audit-trail': typeof AuditTrailRoute
+  '/login': typeof LoginRoute
+  '/settings': typeof SettingsRoute
+  '/work-logs': typeof WorkLogsRoute
   '/permits/$permitNumber': typeof PermitsPermitNumberRoute
+  '/permits/new': typeof PermitsNewRoute
   '/permits/': typeof PermitsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/permits/$permitNumber' | '/permits/'
+  fullPaths:
+    | '/'
+    | '/approvals'
+    | '/audit-trail'
+    | '/login'
+    | '/settings'
+    | '/work-logs'
+    | '/permits/$permitNumber'
+    | '/permits/new'
+    | '/permits/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/permits/$permitNumber' | '/permits'
-  id: '__root__' | '/' | '/auth' | '/permits/$permitNumber' | '/permits/'
+  to:
+    | '/'
+    | '/approvals'
+    | '/audit-trail'
+    | '/login'
+    | '/settings'
+    | '/work-logs'
+    | '/permits/$permitNumber'
+    | '/permits/new'
+    | '/permits'
+  id:
+    | '__root__'
+    | '/'
+    | '/approvals'
+    | '/audit-trail'
+    | '/login'
+    | '/settings'
+    | '/work-logs'
+    | '/permits/$permitNumber'
+    | '/permits/new'
+    | '/permits/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AuthRoute: typeof AuthRoute
+  ApprovalsRoute: typeof ApprovalsRoute
+  AuditTrailRoute: typeof AuditTrailRoute
+  LoginRoute: typeof LoginRoute
+  SettingsRoute: typeof SettingsRoute
+  WorkLogsRoute: typeof WorkLogsRoute
   PermitsPermitNumberRoute: typeof PermitsPermitNumberRoute
+  PermitsNewRoute: typeof PermitsNewRoute
   PermitsIndexRoute: typeof PermitsIndexRoute
 }
 
@@ -78,11 +156,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
+    '/approvals': {
+      id: '/approvals'
+      path: '/approvals'
+      fullPath: '/approvals'
+      preLoaderRoute: typeof ApprovalsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/audit-trail': {
+      id: '/audit-trail'
+      path: '/audit-trail'
+      fullPath: '/audit-trail'
+      preLoaderRoute: typeof AuditTrailRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/work-logs': {
+      id: '/work-logs'
+      path: '/work-logs'
+      fullPath: '/work-logs'
+      preLoaderRoute: typeof WorkLogsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/permits/': {
@@ -99,13 +205,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PermitsPermitNumberRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/permits/new': {
+      id: '/permits/new'
+      path: '/permits/new'
+      fullPath: '/permits/new'
+      preLoaderRoute: typeof PermitsNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AuthRoute: AuthRoute,
+  ApprovalsRoute: ApprovalsRoute,
+  AuditTrailRoute: AuditTrailRoute,
+  LoginRoute: LoginRoute,
+  SettingsRoute: SettingsRoute,
+  WorkLogsRoute: WorkLogsRoute,
   PermitsPermitNumberRoute: PermitsPermitNumberRoute,
+  PermitsNewRoute: PermitsNewRoute,
   PermitsIndexRoute: PermitsIndexRoute,
 }
 export const routeTree = rootRouteImport

@@ -46,7 +46,9 @@ export const Route = createFileRoute("/permits/")({
     ]);
   },
   errorComponent: ({ error }) => (
-    <div className="p-8 font-mono text-sm text-st-rejected">Register unavailable: {error.message}</div>
+    <div className="p-8 font-mono text-sm text-st-rejected">
+      Register unavailable: {error.message}
+    </div>
   ),
   component: PermitRegister,
 });
@@ -58,17 +60,31 @@ function PermitRegister() {
   const [status, setStatus] = useState<PermitStatus | null>(null);
 
   const rows = permits.filter(
-    (p) =>
-      (!typeCode || p.permit_type?.code === typeCode) && (!status || p.status === status),
+    (p) => (!typeCode || p.permit_type?.code === typeCode) && (!status || p.status === status),
   );
 
   return (
     <AppShell breadcrumb="OPERATIONS / REGISTER" title="PERMIT REGISTER">
       <section className="px-8 pt-6">
-        <SectionRule label="(a) FILTERS" right={`${rows.length} OF ${permits.length} RECORDS`} />
+        <div className="flex items-end gap-3">
+          <div className="flex-1">
+            <SectionRule
+              label="(a) FILTERS"
+              right={`${rows.length} OF ${permits.length} RECORDS`}
+            />
+          </div>
+          <Link
+            to="/permits/new"
+            className="mb-5 border border-safety bg-safety px-3 py-2 font-mono text-[10px] tracking-[0.12em] text-safety-ink"
+          >
+            + CREATE PERMIT
+          </Link>
+        </div>
         <div className="space-y-3 border border-border bg-raised p-4">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="mr-1 w-12 font-mono text-[10px] tracking-[0.15em] text-muted">TYPE</span>
+            <span className="mr-1 w-12 font-mono text-[10px] tracking-[0.15em] text-muted">
+              TYPE
+            </span>
             <Chip active={typeCode === null} onClick={() => setTypeCode(null)} label="ALL" />
             {types.map((t) => (
               <Chip
@@ -80,7 +96,9 @@ function PermitRegister() {
             ))}
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <span className="mr-1 w-12 font-mono text-[10px] tracking-[0.15em] text-muted">STATUS</span>
+            <span className="mr-1 w-12 font-mono text-[10px] tracking-[0.15em] text-muted">
+              STATUS
+            </span>
             <Chip active={status === null} onClick={() => setStatus(null)} label="ALL" />
             {PERMIT_STATUSES.map((s) => (
               <Chip
@@ -117,14 +135,19 @@ function PermitRegister() {
               >
                 <div className="col-span-2 font-mono text-[12px]">{p.permit_number}</div>
                 <div className="col-span-2">
-                  <TypeChip name={p.permit_type?.name ?? "—"} accent={p.permit_type?.accent ?? "safety"} />
+                  <TypeChip
+                    name={p.permit_type?.name ?? "—"}
+                    accent={p.permit_type?.accent ?? "safety"}
+                  />
                 </div>
                 <div className="col-span-2 text-muted">
                   {p.plant?.name ?? "—"} · {p.area?.name ?? "—"}
                 </div>
                 <div className="col-span-2 text-muted">{p.requester?.full_name ?? "—"}</div>
                 <div className="col-span-2 text-muted">{p.equipment ?? "—"}</div>
-                <div className="col-span-1 font-mono text-[11px] text-muted">{fmtDateTime(p.planned_start)}</div>
+                <div className="col-span-1 font-mono text-[11px] text-muted">
+                  {fmtDateTime(p.planned_start)}
+                </div>
                 <div className="col-span-1">
                   <StatusChip status={p.status} />
                 </div>
