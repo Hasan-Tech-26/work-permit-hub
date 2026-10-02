@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApprovalsRouteImport } from './routes/approvals'
 import { Route as AuditTrailRouteImport } from './routes/audit-trail'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as WorkLogsRouteImport } from './routes/work-logs'
@@ -32,6 +33,11 @@ const ApprovalsRoute = ApprovalsRouteImport.update({
 const AuditTrailRoute = AuditTrailRouteImport.update({
   id: '/audit-trail',
   path: '/audit-trail',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -69,6 +75,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/approvals': typeof ApprovalsRoute
   '/audit-trail': typeof AuditTrailRoute
+  '/auth': typeof AuthRoute
   '/login': typeof LoginRoute
   '/settings': typeof SettingsRoute
   '/work-logs': typeof WorkLogsRoute
@@ -80,6 +87,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/approvals': typeof ApprovalsRoute
   '/audit-trail': typeof AuditTrailRoute
+  '/auth': typeof AuthRoute
   '/login': typeof LoginRoute
   '/settings': typeof SettingsRoute
   '/work-logs': typeof WorkLogsRoute
@@ -92,6 +100,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/approvals': typeof ApprovalsRoute
   '/audit-trail': typeof AuditTrailRoute
+  '/auth': typeof AuthRoute
   '/login': typeof LoginRoute
   '/settings': typeof SettingsRoute
   '/work-logs': typeof WorkLogsRoute
@@ -105,6 +114,7 @@ export interface FileRouteTypes {
     | '/'
     | '/approvals'
     | '/audit-trail'
+    | '/auth'
     | '/login'
     | '/settings'
     | '/work-logs'
@@ -116,6 +126,7 @@ export interface FileRouteTypes {
     | '/'
     | '/approvals'
     | '/audit-trail'
+    | '/auth'
     | '/login'
     | '/settings'
     | '/work-logs'
@@ -127,6 +138,7 @@ export interface FileRouteTypes {
     | '/'
     | '/approvals'
     | '/audit-trail'
+    | '/auth'
     | '/login'
     | '/settings'
     | '/work-logs'
@@ -139,6 +151,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ApprovalsRoute: typeof ApprovalsRoute
   AuditTrailRoute: typeof AuditTrailRoute
+  AuthRoute: typeof AuthRoute
   LoginRoute: typeof LoginRoute
   SettingsRoute: typeof SettingsRoute
   WorkLogsRoute: typeof WorkLogsRoute
@@ -168,6 +181,13 @@ declare module '@tanstack/react-router' {
       path: '/audit-trail'
       fullPath: '/audit-trail'
       preLoaderRoute: typeof AuditTrailRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -219,6 +239,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ApprovalsRoute: ApprovalsRoute,
   AuditTrailRoute: AuditTrailRoute,
+  AuthRoute: AuthRoute,
   LoginRoute: LoginRoute,
   SettingsRoute: SettingsRoute,
   WorkLogsRoute: WorkLogsRoute,
