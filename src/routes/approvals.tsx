@@ -79,8 +79,9 @@ function ApprovalsPage() {
           `id, permit_id, required_role, step_order, decision, decided_at, permit:permits!permit_approvals_permit_id_fkey (id, permit_number, status, work_description, planned_start, permit_type:permit_types ( name, accent ), plant:plants ( name, code ), area:areas ( name, code ), requester:profiles!permits_requester_id_fkey ( full_name ) )`,
         )
         .eq("decision", "PENDING")
-        .or(roleQuery)
-        .order("step_order", { foreignTable: "permits" });
+        .in("required_role", allowedRoles)
+        .eq("decision", "PENDING")
+.in("required_role", allowedRoles);
 
       if (queryError) throw queryError;
       const nextItems = (data ?? []).map((row) => ({
