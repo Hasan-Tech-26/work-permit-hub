@@ -1,67 +1,72 @@
 # Work Permit Hub – PTW Control System
 
-A full-stack Permit-to-Work (PTW) management system designed to digitize, manage, approve, and monitor workplace permit workflows.
+A full-stack Permit-to-Work (PTW) management system for managing workplace permits, approvals, work activities, audit history, and role-based access.
+
+## 🚀 Live Application
+
+https://hasan-tech-26-work-permit-hub.tallyard-ptw.workers.dev
 
 ## 📌 Overview
 
-Work Permit Hub is a web-based Permit-to-Work management platform that replaces manual permit handling with a centralized digital workflow.
+Work Permit Hub digitizes the Permit-to-Work process for a CMMS-style environment.
 
-The system allows authorized users to create permits, submit them for approval, track permit status, manage work activities, maintain audit history, and control access based on user roles.
+The application provides a shared permit model with dynamic permit-type fields, role-based approval workflows, lifecycle controls, work logging, audit history, and database-level workflow protection.
 
 ## ✨ Key Features
 
-- 🔐 Secure authentication
-- 👥 Role-Based Access Control (RBAC)
-- 🛡️ PostgreSQL Row-Level Security (RLS)
-- 📋 Permit creation and management
-- 🔄 Permit lifecycle management
-- ✅ Multi-role approval workflow
-- 🚫 Unauthorized approval prevention
-- 📝 Work activity logs
-- 📜 Audit trail
-- ⏱️ Permit expiry handling
-- 📊 Dashboard and permit statistics
-- 🔎 Permit register and tracking
-- ⚙️ Application settings
-- 📱 Responsive user interface
+- Secure email/password authentication
+- Role-Based Access Control (RBAC)
+- PostgreSQL database with Supabase
+- Row-Level Security (RLS)
+- Shared permit entity with dynamic permit-type fields
+- Permit Register with filtering
+- Permit creation and detail views
+- Multi-step approval workflow
+- Server/database-level lifecycle validation
+- Self-approval prevention
+- Area-based approval permissions
+- Work activity logging
+- Immutable audit history
+- Permit expiry handling
+- Dashboard and statistics
+- Closure verification
+- Responsive interface
 
-## 👤 User Roles
+## 👥 User Roles
 
 ### Requester
-- Creates work permits
+- Creates permits
 - Submits permits for approval
 - Tracks permit status
-- Manages permitted work information
+- Cannot approve their own permit
 
 ### Area Owner
 - Reviews permits for assigned areas
-- Approves or rejects applicable permits
+- Approves applicable permits for their area
+- Cannot approve their own permit
 
 ### Safety Officer
-- Reviews safety-related permit requirements
 - Performs safety approval
+- Can suspend active permits
+- Verifies permit closure
 
 ### Admin
-- Manages administrative operations
-- Has elevated system privileges
+- Administrative access
+- Can manage the complete permit workflow
 
-## 🔄 Permit Workflow
+## 🔄 Permit Lifecycle
 
 ```text
-Create Permit
-      ↓
-Draft
-      ↓
-Submit for Approval
-      ↓
-Pending Approval
-      ↓
-Area / Safety / Admin Approval
-      ↓
-Approved
-      ↓
-Active
-      ↓
-Suspended / Closed / Cancelled
-      ↓
-Closed Verified
+DRAFT
+  ↓
+PENDING_APPROVAL
+  ↓
+APPROVED
+  ↓
+ACTIVE
+  ├──→ SUSPENDED ──→ ACTIVE
+  ├──→ CLOSED ──→ CLOSED_VERIFIED
+  ├──→ CANCELLED
+  └──→ EXPIRED
+
+PENDING_APPROVAL ──→ REJECTED
