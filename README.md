@@ -70,3 +70,7 @@ ACTIVE
   └──→ EXPIRED
 
 PENDING_APPROVAL ──→ REJECTED
+
+## 🎥 Demo Video
+
+[Watch the Work Permit Hub demo](https://www.loom.com/share/e859b7ab08064f7dac6c267662850219)
